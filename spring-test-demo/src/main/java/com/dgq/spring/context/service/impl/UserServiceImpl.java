@@ -13,6 +13,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String getUserName(String number) {
+		System.out.println(user);
+		System.out.println(this);
+
 		return user.getName()+"_"+number;
 	}
 }
