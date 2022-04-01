@@ -3,19 +3,40 @@ package com.dgq.spring.context.service.impl;
 import com.dgq.spring.context.pojo.User;
 import com.dgq.spring.context.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
+@CacheConfig
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private User user;
-
+	/**
+	 * @CachePut将结果缓存起来,且该方法不管缓存是否存在每次都会执行
+	 * @param name
+	 * @return
+	 */
 	@Override
-	public String getUserName(String number) {
-		System.out.println(user);
-		System.out.println(this);
+	@CachePut(value = "cache_test", key = "#name")
+	public User getUserNameCache(String name) {
+		return getUserName(name);
+	}
 
-		return user.getName()+"_"+number;
+	/**
+	 * @Cacheable 将结果缓存起来，当参数相同时从缓存中取
+	 * @param name
+	 * @return
+	 */
+	@Override
+	@Cacheable(value = "cache_test", key = "#name")
+	public User getUserName(String name) {
+		System.out.println("----------------getUserName:"+name);
+
+		User user = new User();
+
+		user.setName(name);
+
+		return user;
 	}
 }
